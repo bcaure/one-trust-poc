@@ -28,6 +28,20 @@ export default function App() {
     return 'Recommended for You';
   }, [isAnonymous]);
 
+  useEffect(() => {
+    NativeModules.OTConsent.initializeConsent() //returns a promise with value of shouldShowBanner
+      .then((shouldShowBanner: boolean) => {
+        console.log('Promise resolved; should show banner = ' + shouldShowBanner);
+        if (shouldShowBanner) {
+          NativeModules.OTConsent.loadPrefCenter('banner');
+        }
+      })
+      .catch((error: string) => {
+        console.log(`initializeConsent error: ${JSON.stringify(error)}`);
+      });
+    
+  }, []);
+
 
 
 
