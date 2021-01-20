@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="330" height="75" viewBox="0 0 330 75">
+    <g fill="none" fill-rule="evenodd">
+        <path fill="#FFF5F3" d="M1 17h328v40H1z"/>
+        <path stroke="#E35E50" d="M1 17h328v40H1z"/>
+        <text fill="#9EADBA" font-family="Raleway-Regular, Raleway" font-size="16" transform="translate(1 17)">
+            <tspan x="16" y="23">Select</tspan>
+        </text>
+        <text fill="#436580" font-family="Raleway-Medium, Raleway" font-size="12" font-weight="400" transform="translate(1 -1)">
+            <tspan x="0" y="11">Label</tspan>
+        </text>
+        <text fill="#D24637" font-family="Raleway-Medium, Raleway" font-size="12" font-weight="400" transform="translate(1 -1)">
+            <tspan x="0" y="73">Error message</tspan>
+        </text>
+    </g>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="18" viewBox="0 0 36 18">
+    <g fill="none" fill-rule="evenodd">
+        <path fill="#D9A028" d="M0 0h36v18H0z"/>
+        <text fill="#FFF" font-family="Raleway-Bold, Raleway" font-size="10" font-weight="bold">
+            <tspan x="5.27" y="13">EASY</tspan>
+        </text>
+    </g>
+</svg>
