@@ -34,7 +34,9 @@ public class OTConsent extends ReactContextBaseJavaModule {
     public void initializeConsent(Promise promise) {
         OTPublishersHeadlessSDK otPublishersHeadlessSDK = new OTPublishersHeadlessSDK(getReactApplicationContext());
         otPublishersHeadlessSDK.enableOTSDKLog(Log.VERBOSE);
-        otPublishersHeadlessSDK.initOTSDKData("otcc-demo.otprivacy.com", "0e8fa22d-8446-414f-b807-d51ed7731234-test", "en", null, new OTCallback() {
+        final String location = "cdn.cookielaw.org";
+        Log.i("ReactBridge", "Init SDK from " + location);
+        otPublishersHeadlessSDK.initOTSDKData(location, "0e8fa22d-8446-414f-b807-d51ed7731234-test", "en", null, new OTCallback() {
             @Override
             public void onSuccess(@NonNull OTResponse otResponse) {
                 Log.i("ReactBridge","Data Downloaded Successfully");
@@ -46,6 +48,7 @@ public class OTConsent extends ReactContextBaseJavaModule {
             @Override
             public void onFailure(@NonNull OTResponse otResponse) {
                 Log.e("ReactBridge","Data Download Unsuccessful");
+                Log.e("ReactBridge", otResponse.toString());
                 promise.reject("-1","OT SDK Download Failed");
             }
         });
