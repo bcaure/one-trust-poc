@@ -36,7 +36,7 @@ public class OTConsent extends ReactContextBaseJavaModule {
         otPublishersHeadlessSDK.enableOTSDKLog(Log.VERBOSE);
         final String location = "cdn.cookielaw.org";
         Log.i("ReactBridge", "Init SDK from " + location);
-        otPublishersHeadlessSDK.initOTSDKData(location, "0e8fa22d-8446-414f-b807-d51ed7731234-test", "en", null, new OTCallback() {
+        otPublishersHeadlessSDK.initOTSDKData(location, "b580358c-65e6-4577-a05b-f58f373793c1-test", "en", null, new OTCallback() {
             @Override
             public void onSuccess(@NonNull OTResponse otResponse) {
                 Log.i("ReactBridge","Data Downloaded Successfully");
