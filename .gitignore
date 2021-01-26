@@ -31,6 +31,12 @@ local.properties
 *.iml
 *.hprof
 
+# Eclipse
+#
+.project
+.classpath
+*.prefs
+
 # node.js
 #
 node_modules/
