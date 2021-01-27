@@ -29,17 +29,18 @@ export default function App() {
   }, [isAnonymous]);
 
   useEffect(() => {
+    console.log('InitializeConsent - before');
     NativeModules.OTConsent.initializeConsent() //returns a promise with value of shouldShowBanner
       .then((shouldShowBanner: boolean) => {
-        console.log('Promise resolved; should show banner = ' + shouldShowBanner);
+        console.log('InitializeConsent - Promise resolved; should show banner = ' + shouldShowBanner);
         if (shouldShowBanner) {
           NativeModules.OTConsent.loadPrefCenter('banner');
         }
       })
       .catch((error: string) => {
-        console.log(`initializeConsent error: ${JSON.stringify(error)}`);
+        console.log(`InitializeConsent - error: ${JSON.stringify(error)}`);
       });
-    
+      console.log('InitializeConsent - after');    
   }, []);
 
 
