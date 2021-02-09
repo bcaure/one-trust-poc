@@ -33,7 +33,7 @@ const MainHeader = ({headerTitle}) => {
         }
       />
 
-      <MainSearchInput title={headerTitle} />
+      {/* <MainSearchInput title={headerTitle} /> */}
 
     </View>
   );

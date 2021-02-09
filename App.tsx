@@ -1,14 +1,12 @@
-import React, { useEffect, useMemo } from 'react';
-import { Image, StyleSheet, View, ScrollView, NativeModules } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, NativeModules, DeviceEventEmitter, NativeEventEmitter, ScrollView, View, Image } from 'react-native';
 import { PaddedView } from './components/PaddedView';
-import { H2, Label1 } from './components/typography';
-import { homeHeadingCocktail, recipeList } from './components/images';
+import { AgeGateForm } from './forms/AgeGate';
+import IntroHeader from './components/header/IntroHeader';
 import TextButton from './components/buttons/TextButton';
 import MyBarHeader from './components/header/MyBarHeader';
-
-interface Recipe {
-  id: string;
-}
+import { homeHeadingCocktail, recipeList } from './components/images';
+import { H2, Label1 } from './components/typography';
 
 
 export default function App() {
@@ -17,30 +15,46 @@ export default function App() {
   const firstName = 'Benjamin';
   const isAnonymous = true;
 
-  const welcomeText = useMemo(() => {
-    if (isAnonymous) return `Let's make some cocktails`;
-    if (!userRole) return `Welcome ${firstName}`;
-    return `Welcome ${firstName}`; // Removing "back" because it was always showing up, need a new way to figure this out
-  }, [userRole, firstName]);
 
-  const recommendedText = useMemo(() => {
-    if (isAnonymous) return 'Most loved';
-    return 'Recommended for You';
-  }, [isAnonymous]);
+
+  const [c0002Consent, setC0002Consent] = useState(false);
+  const [c0005Consent, setC0005Consent] = useState(false);
+  const [showHomePage, setShowHomePage] = useState(false);
 
   useEffect(() => {
     console.log('InitializeConsent - before');
     NativeModules.OTConsent.initializeConsent() //returns a promise with value of shouldShowBanner
-      .then((shouldShowBanner: boolean) => {
-        console.log('InitializeConsent - Promise resolved; should show banner = ' + shouldShowBanner);
-        if (shouldShowBanner) {
-          NativeModules.OTConsent.loadPrefCenter('banner');
-        }
+      .then((consents: boolean[]) => {
+        console.log(`InitializeConsent - C0002 consent = ${consents[0]}; C0005 consent = ${consents[1]}`);
+        setC0002Consent(consents[0]);
+        setC0005Consent(consents[1]);
+
+        ///// Categories listeners
+        NativeModules.OTConsent.listenForConsentChanges();
+        DeviceEventEmitter.addListener('C0002', consent => setC0002Consent(consent === 1));
+        DeviceEventEmitter.addListener('C0005', consent => setC0005Consent(consent === 1));
+
+        ///// UI listeners
+        // NativeModules.OTConsent.listenForUIEvents();
+        // DeviceEventEmitter.addListener('hidePreferenceCenter', (event) => {
+        //   console.log('hidePreferenceCenter');
+        // });
+        // DeviceEventEmitter.addListener('preferenceCenterAcceptAll', (event) => {
+        //   console.log('preferenceCenterAcceptAll');
+        // });
+        // DeviceEventEmitter.addListener('preferenceCenterRejectAll', (event) => {
+        //   console.log('preferenceCenterRejectAll');
+        // });
+        // DeviceEventEmitter.addListener('preferenceCenterConfirmChoices', (event) => {
+        //   console.log('preferenceCenterConfirmChoices');
+        // });
+
       })
       .catch((error: string) => {
         console.log(`InitializeConsent - error: ${JSON.stringify(error)}`);
       });
-      console.log('InitializeConsent - after');    
+    console.log('InitializeConsent - after');    
+
   }, []);
 
 
@@ -48,33 +62,57 @@ export default function App() {
 
   return (
     <>
-      <MyBarHeader headerTitle="What are you in the mood for?" />
-      <ScrollView
-        bounces={false}
-        contentContainerStyle={styles.scrollviewContent}
-        showsVerticalScrollIndicator={false}>
-        <PaddedView style={styles.container}>
-          <H2 style={styles.title}>{welcomeText}</H2>
-          <Image source={homeHeadingCocktail} />
+      {
+        /* AGE GATE PAGE */ 
+        !showHomePage && (
+          <>
+            <IntroHeader />
+            <PaddedView style={styles.flex}>
+              <AgeGateForm 
+                onSuccess={(values: any) => { console.log('submit'); setShowHomePage(true); }}
+                agreeToDataPrivacy={c0002Consent || c0005Consent}
+                handleDataPrivacyClicked={() => {
+                  NativeModules.OTConsent.loadPrefCenter('prefCenter')
+                }}
+              />
+            </PaddedView>
+          </>
+        )
+      } 
+      {
+        /* HOME PAGE */ 
+        showHomePage && (
+          <>
+            <MyBarHeader headerTitle="What are you in the mood for?" />
+            <ScrollView
+              bounces={false}
+              contentContainerStyle={styles.scrollviewContent}
+              showsVerticalScrollIndicator={false}>
+              <PaddedView style={styles.container}>
+                <H2 style={styles.title}>Let's make some cocktails</H2>
+                <Image source={homeHeadingCocktail} />
 
-          <View style={styles.titleWithActionRow}>
-            <Label1>{recommendedText}</Label1>
-            <TextButton title="View All" />
-          </View>
-          <View>
-            <Image source={recipeList} />
-          </View>
-          <View style={[styles.titleWithActionRow, styles.spacerBelowList]}>
-            <Label1>More to Explore</Label1>
-            <TextButton title="View All" />
-          </View>
+                <View style={styles.titleWithActionRow}>
+                  <Label1>MOST LOVED</Label1>
+                  <TextButton title="View All" />
+                </View>
+                <View>
+                  <Image source={recipeList} />
+                </View>
+                <View style={[styles.titleWithActionRow, styles.spacerBelowList]}>
+                  <Label1>More to Explore</Label1>
+                  <TextButton title="View All" onClick={() => {}} />
+                </View>
 
-        </PaddedView>
-      </ScrollView>
+              </PaddedView>
+            </ScrollView>
+          </>
+        )}
     </>
   );
 }
 const styles = StyleSheet.create({
+  flex: {flex: 1},
   container: {
     flex: 1,
     justifyContent: 'flex-start',

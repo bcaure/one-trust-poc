@@ -41,7 +41,8 @@ const relativeWrapperStyle = Platform.select({
 const styles = StyleSheet.create({
   relativeWrapper: {
     ...relativeWrapperStyle,
-    // height: DROPDOWN_HEADER_TEXT_INPUT_HEIGHT + DROPDOWN_OFFSET_TOP,
+    height: 30,
+    width:200,
   },
   dropdownContainer: {
     ...dropdownContainerStyle,
@@ -64,6 +65,9 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: colors.primary1,
     height: BG_HEIGHT,
+  },
+  bgWhite: {
+    backgroundColor: white,
   },
   inputGroup: {
     height: 16,
@@ -99,6 +103,8 @@ const styles = StyleSheet.create({
   input: {
     ...textStyle(fonts.primary.normal, colors.primary1, 16, 1.2),
     flex: 1,
+    height: 30,
+    width: 200,
   },
   inputActive: {
     fontFamily: fonts.primary.medium,
@@ -150,7 +156,7 @@ const MainSearchInput = ({ title = '' }) => {
     <>
       <View style={styles.relativeWrapper}>
         <View style={styles.bg} />
-        {/* <View style={styles.bgWhite} /> */}
+        <View style={styles.bgWhite} />
         <View style={styles.dropdownContainer}>
           <View style={[
               styles.inputGroup,
